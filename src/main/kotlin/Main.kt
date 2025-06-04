@@ -2,22 +2,46 @@ package com.fugisawa
 
 import java.security.SecureRandom
 
+// Create a single SecureRandom instance to be reused across all calls
+private val random = SecureRandom()
+
 /**
- * Generates a random integer within the specified range [start, end] (inclusive).
+ * Generates random integers within the specified range [start, end] (inclusive).
  * Uses SecureRandom for cryptographically strong random number generation.
+ * Ensures all generated numbers are unique (no duplicates).
  *
  * @param start The lower bound of the range (inclusive)
  * @param end The upper bound of the range (inclusive)
- * @return A random integer within the specified range
+ * @param numberOfRandoms The number of random integers to generate (default is 1)
+ * @return An array of random integers within the specified range
  * @throws IllegalArgumentException if start is greater than end
+ * @throws IllegalArgumentException if numberOfRandoms is greater than the possible range of values
  */
-fun randomInt(start: Int, end: Int): Int {
+fun randomInt(start: Int, end: Int, numberOfRandoms: Int = 1): IntArray {
     require(start <= end) { "Start value must be less than or equal to end value" }
+    require(numberOfRandoms > 0) { "Number of randoms must be greater than zero" }
 
-    if (start == end) return start
+    // If start equals end, all numbers will be the same
+    if (start == end) {
+        return IntArray(numberOfRandoms) { start }
+    }
 
-    val random = SecureRandom()
-    return random.nextInt(end - start + 1) + start
+    val rangeSize = end - start + 1
+    require(numberOfRandoms <= rangeSize) { "Cannot generate $numberOfRandoms unique numbers in range $start..$end (range size: $rangeSize)" }
+
+    // If only one number is requested, use the simpler logic
+    if (numberOfRandoms == 1) {
+        return intArrayOf(random.nextInt(rangeSize) + start)
+    }
+
+    val result = mutableSetOf<Int>()
+
+    // Generate unique random numbers until we have enough
+    while (result.size < numberOfRandoms) {
+        result.add(random.nextInt(rangeSize) + start)
+    }
+
+    return result.toIntArray()
 }
 
 /**
@@ -40,11 +64,13 @@ fun showFakeButCoolProgressBar(totalSteps: Int = 30, delayMs: Int = 80) {
 fun main() {
     val min = 1
     val max = 100
+    val numberOfWinners = 3
 
     println("Raffle range: [$min..$max]")
+    println("Number of winners: $numberOfWinners")
 
     showFakeButCoolProgressBar()
 
-    val randomNumber = randomInt(min, max)
-    println("... the lucky person in row: $randomNumber 🎉🎉🎉")
+    val randomNumbers = randomInt(min, max, numberOfWinners)
+    println("... the lucky people in rows: ${randomNumbers.joinToString(", ")} 🎉🎉🎉")
 }
