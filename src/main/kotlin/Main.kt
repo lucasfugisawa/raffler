@@ -21,7 +21,6 @@ fun randomInt(start: Int, end: Int, numberOfRandoms: Int = 1): IntArray {
     require(start <= end) { "Start value must be less than or equal to end value" }
     require(numberOfRandoms > 0) { "Number of randoms must be greater than zero" }
 
-    // If start equals end, all numbers will be the same
     if (start == end) {
         return IntArray(numberOfRandoms) { start }
     }
@@ -29,14 +28,12 @@ fun randomInt(start: Int, end: Int, numberOfRandoms: Int = 1): IntArray {
     val rangeSize = end - start + 1
     require(numberOfRandoms <= rangeSize) { "Cannot generate $numberOfRandoms unique numbers in range $start..$end (range size: $rangeSize)" }
 
-    // If only one number is requested, use the simpler logic
     if (numberOfRandoms == 1) {
         return intArrayOf(random.nextInt(rangeSize) + start)
     }
 
     val result = mutableSetOf<Int>()
 
-    // Generate unique random numbers until we have enough
     while (result.size < numberOfRandoms) {
         result.add(random.nextInt(rangeSize) + start)
     }
@@ -51,7 +48,7 @@ fun randomInt(start: Int, end: Int, numberOfRandoms: Int = 1): IntArray {
  * @param delayMs The delay between steps in milliseconds
  */
 fun showFakeButCoolProgressBar(totalSteps: Int = 30, delayMs: Int = 80) {
-    println("And the JetBrains IDE license goes to...")
+    println("And the reward goes to...")
     print("Generating: [")
     for (i in 1..totalSteps) {
         print("=")
@@ -64,7 +61,7 @@ fun showFakeButCoolProgressBar(totalSteps: Int = 30, delayMs: Int = 80) {
 fun main() {
     val min = 1
     val max = 100
-    val numberOfWinners = 3
+    val numberOfWinners = 1
 
     println("Raffle range: [$min..$max]")
     println("Number of winners: $numberOfWinners")
