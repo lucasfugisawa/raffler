@@ -59,8 +59,8 @@ fun showFakeButCoolProgressBar(totalSteps: Int = 30, delayMs: Int = 80) {
 }
 
 fun main() {
-    val min = 1
-    val max = 100
+    val min = 2
+    val max = 9
     val numberOfWinners = 1
 
     println("Raffle range: [$min..$max]")
